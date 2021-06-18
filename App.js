@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Alert, Button, Image, View } from 'react-native';
+import { Alert, Button, Image, Text, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker'
 import { RNCamera } from 'react-native-camera';
+import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const androidCameraPermissionOptions = {
   title: "Permitir acceso a la cámara",
@@ -13,6 +14,7 @@ const androidCameraPermissionOptions = {
 const App = function() {
 
   const [photoSource, setPhotoSource] = useState();
+  const [QrCodeText, setQrCodeText] = useState('');
 
   const openGallery = function() {
     launchImageLibrary({ mediaType: 'photo' }, function(ipr) {
@@ -45,17 +47,22 @@ const App = function() {
   return (
     <View>
       <Button title="Abrir galería" onPress={() => openGallery()} />
-      <Image source={photoSource}
+      {/* <Image source={photoSource}
         style={{height:300}}
-        onError={(error) => console.log(error)} />
-      <RNCamera
+        onError={(error) => console.log(error)} /> */}
+      <QRCodeScanner
+        reactivate={true}
+        onRead={e => setQrCodeText(e.data)}
+      />
+      <Text>{QrCodeText}</Text>
+      {/* <RNCamera
         ref={ref => { this.camara = ref }}
-        style={{height: 300}}
+        style={{maxHeight: 300}}
         type={RNCamera.Constants.Type.back}
         captureAudio={false}
         androidCameraPermissionOptions={androidCameraPermissionOptions}
       />
-      <Button title="Capturar" onPress={capturarOnPress} />
+      <Button title="Capturar" onPress={capturarOnPress} /> */}
     </View>
   )
 }
